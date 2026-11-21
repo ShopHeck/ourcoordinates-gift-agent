@@ -19,7 +19,7 @@ export function validateCustomLine(line: string, spec: EngravingSpec): string | 
 
 function coordLines(lat: number, lng: number, spec: EngravingSpec, precision: number): string[] {
   const c = spec.format === "dms" ? formatDMS(lat, lng, precision) : formatDecimal(lat, lng, precision);
-  return spec.singleLineCoords ? [`${c.lat} ${c.lng}`] : [c.lat, c.lng];
+  return spec.singleLineCoords ? [`${c.lat}, ${c.lng}`] : [c.lat, c.lng];
 }
 
 export function fitEngraving(lat: number, lng: number, spec: EngravingSpec, extraLines: string[] = []): FitResult {

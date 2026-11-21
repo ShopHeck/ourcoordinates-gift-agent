@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { fitEngraving } from "@/lib/engraving/fit";
 import { products, getProduct } from "@/lib/catalog";
 import { renderPreviewSVG } from "@/components/Preview/svg";
+import { STORE, lineItemProperties, cartAddFields } from "@/lib/checkout";
 import type { AgentState } from "@/lib/agent/state";
 import type { Pin } from "@/components/Map/PlaceMap";
 
@@ -23,6 +24,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [extra, setExtra] = useState("");
   const [busy, setBusy] = useState(false);
+  const [variantId, setVariantId] = useState("");
 
   async function call(body: Record<string, unknown>, show?: string) {
     if (show) setBubbles((b) => [...b, { from: "you", text: show }]);
@@ -55,8 +57,10 @@ export default function Home() {
     if (!product || !state.confirmed) return null;
     const lines = extra.trim() ? [extra.trim()] : [];
     const fit = fitEngraving(state.confirmed.lat, state.confirmed.lng, product.engraving, lines);
-    return { fit, svg: renderPreviewSVG(product, fit.lines) };
+    const props = lineItemProperties(product, fit.lines, state.confirmed);
+    return { fit, svg: renderPreviewSVG(product, fit.lines), props };
   }, [product, state.confirmed, extra]);
+  const variant = product?.variants.find((v) => v.id === variantId) ?? product?.variants[0];
 
   return (
     <main style={{ maxWidth: 520, margin: "0 auto", minHeight: "100vh", display: "flex", flexDirection: "column", background: "#faf7f1" }}>
@@ -88,17 +92,30 @@ export default function Home() {
 
         {live && (
           <div style={{ background: "#fff", borderRadius: 14, padding: 14, boxShadow: "0 1px 3px #0002" }}>
-            <div style={{ fontWeight: 600, marginBottom: 8 }}>{product!.name}</div>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
+              <img src={product!.image} alt="" width={52} height={52} style={{ borderRadius: 8, objectFit: "cover" }} />
+              <div><div style={{ fontWeight: 600 }}>{product!.name}</div><div style={{ fontSize: 13, color: "#666" }}>${variant?.price}</div></div>
+            </div>
             <div dangerouslySetInnerHTML={{ __html: live.svg }} />
             <input value={extra} onChange={(e) => setExtra(e.target.value)} placeholder="Add a line (names or a date)"
               style={{ width: "100%", padding: 10, marginTop: 10, borderRadius: 8, border: "1px solid #ddd", boxSizing: "border-box" }} />
             <p style={{ fontSize: 12, color: live.fit.ok ? "#666" : "crimson", marginTop: 6 }}>
               {live.fit.ok ? `Accurate to about ${live.fit.accuracy_m < 1 ? "under a meter" : `${live.fit.accuracy_m.toFixed(0)} m`}` : live.fit.errors.join("; ")}
             </p>
-            <select value={product!.id} onChange={(e) => setState((s) => ({ ...s, productId: e.target.value }))}
+            <select value={product!.id} onChange={(e) => { setVariantId(""); setState((s) => ({ ...s, productId: e.target.value })); }}
               style={{ width: "100%", padding: 8, borderRadius: 8 }}>
               {products.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
+            {product!.variants.length > 1 && (
+              <select value={variant?.id} onChange={(e) => setVariantId(e.target.value)} style={{ width: "100%", padding: 8, borderRadius: 8, marginTop: 6 }}>
+                {product!.variants.map((v) => <option key={v.id} value={v.id}>{v.title} · ${v.price}</option>)}
+              </select>
+            )}
+            <form method="POST" action={`${STORE}/cart/add`} style={{ marginTop: 10 }}>
+              {variant && cartAddFields(variant.id, live.props).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
+              <button disabled={!live.fit.ok} style={{ width: "100%", padding: 12, borderRadius: 10, border: 0,
+                background: live.fit.ok ? "#222" : "#ccc", color: "#fff", fontWeight: 600 }}>Checkout on OurCoordinates</button>
+            </form>
           </div>
         )}
         {busy && <div style={{ color: "#999", fontSize: 13 }}>Thinking…</div>}

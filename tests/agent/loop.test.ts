@@ -12,7 +12,7 @@ describe("state gating", () => {
     expect(allowedTools("CONFIRMED")).toContain("fit_engraving");
   });
   it("fit_engraving refuses an unconfirmed place", async () => {
-    const r: any = await runTool("fit_engraving", { productId: "bar-bracelet" }, initialState);
+    const r: any = await runTool("fit_engraving", { productId: "keychain" }, initialState);
     expect(r.result.error).toMatch(/not confirmed/);
   });
 });

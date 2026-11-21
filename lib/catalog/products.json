@@ -1,17 +1,278 @@
 {
-  "_note": "Placeholder specs for development. Replace with the real OurCoordinates catalog (names, variants, limits) once approved.",
-  "products": [
-    { "id": "bar-bracelet", "name": "Coordinate Bar Bracelet", "type": "bracelet",
-      "engraving": { "maxLines": 2, "maxCharsPerLine": 22, "format": "dms", "singleLineCoords": false,
-        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥" } },
-    { "id": "bar-necklace", "name": "Coordinate Bar Necklace", "type": "necklace",
-      "engraving": { "maxLines": 3, "maxCharsPerLine": 24, "format": "dms", "singleLineCoords": false,
-        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥" } },
-    { "id": "band-ring", "name": "Coordinate Band Ring", "type": "ring",
-      "engraving": { "maxLines": 1, "maxCharsPerLine": 30, "format": "decimal", "singleLineCoords": true,
-        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,&-/" } },
-    { "id": "keychain", "name": "Coordinate Keychain", "type": "keychain",
-      "engraving": { "maxLines": 4, "maxCharsPerLine": 20, "format": "dms", "singleLineCoords": false,
-        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥" } }
-  ]
+ "_source": "ourcoordinates.com/products.json, Nov 21 2026. Limits from each product page's engraving input maxlength (rings: 25 per description).",
+ "products": [
+  {
+   "id": "flat-bar-necklace",
+   "name": "Flat Bar Coordinates Necklace",
+   "type": "necklace",
+   "handle": "flat-bar-coordinates-choker-style-necklace",
+   "url": "https://ourcoordinates.com/products/flat-bar-coordinates-choker-style-necklace",
+   "image": "https://cdn.shopify.com/s/files/1/0300/7437/2231/files/flat-bar-coordinates-necklace-7870365.jpg?v=1794667931",
+   "price": "39.99",
+   "variants": [
+    {
+     "id": "51047926726914",
+     "title": "Without back engraving / Rose gold",
+     "price": "39.99"
+    },
+    {
+     "id": "51047926759682",
+     "title": "Without back engraving / Gold",
+     "price": "39.99"
+    },
+    {
+     "id": "51047926792450",
+     "title": "Without back engraving / Silver",
+     "price": "39.99"
+    }
+   ],
+   "engraving": {
+    "maxLines": 1,
+    "maxCharsPerLine": 30,
+    "format": "decimal",
+    "singleLineCoords": true,
+    "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥°"
+   },
+   "fields": [
+    "Engraving"
+   ]
+  },
+  {
+   "id": "dog-tag",
+   "name": "Coordinates Dog Tag Necklace",
+   "type": "necklace",
+   "handle": "coordinates-dog-tag",
+   "url": "https://ourcoordinates.com/products/coordinates-dog-tag",
+   "image": "https://cdn.shopify.com/s/files/1/0300/7437/2231/files/coordinates-dog-tag-necklace-3582772.jpg?v=1794667931",
+   "price": "39.00",
+   "variants": [
+    {
+     "id": "51049649438978",
+     "title": "Without back engraving / 18K Rose Gold Plated",
+     "price": "39.00"
+    },
+    {
+     "id": "51049649471746",
+     "title": "Without back engraving / 18k Gold Plated",
+     "price": "39.00"
+    },
+    {
+     "id": "51049649504514",
+     "title": "Without back engraving / Silver Steel",
+     "price": "39.00"
+    }
+   ],
+   "engraving": {
+    "maxLines": 3,
+    "maxCharsPerLine": 20,
+    "format": "decimal",
+    "singleLineCoords": false,
+    "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥°"
+   },
+   "fields": [
+    "Engraving — Line 1",
+    "Engraving — Line 2",
+    "Engraving — Line 3"
+   ]
+  },
+  {
+   "id": "cord-bracelet",
+   "name": "Braided Cord Bar Bracelet",
+   "type": "bracelet",
+   "handle": "personalized-braided-cord-bar-bracelet",
+   "url": "https://ourcoordinates.com/products/personalized-braided-cord-bar-bracelet",
+   "image": "https://cdn.shopify.com/s/files/1/0300/7437/2231/files/personalized-braided-cord-bar-bracelet-8095810.jpg?v=1794916570",
+   "price": "58.00",
+   "variants": [
+    {
+     "id": "51080690368770",
+     "title": "Without back engraving / Silver",
+     "price": "58.00"
+    }
+   ],
+   "engraving": {
+    "maxLines": 1,
+    "maxCharsPerLine": 30,
+    "format": "decimal",
+    "singleLineCoords": true,
+    "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥°"
+   },
+   "fields": [
+    "Front Engraving"
+   ]
+  },
+  {
+   "id": "ring-womens",
+   "name": "Coordinates Flat Band Ring (Women's)",
+   "type": "ring",
+   "handle": "coordinates-flat-band-ring",
+   "url": "https://ourcoordinates.com/products/coordinates-flat-band-ring",
+   "image": "https://cdn.shopify.com/s/files/1/0300/7437/2231/files/coordinates-flat-band-ring-womens-4072445.jpg?v=1794667873",
+   "price": "35.00",
+   "variants": [
+    {
+     "id": "51049683812610",
+     "title": "6 / Silver",
+     "price": "35.00"
+    },
+    {
+     "id": "51049683845378",
+     "title": "6 / Gold",
+     "price": "40.00"
+    },
+    {
+     "id": "51049683878146",
+     "title": "7 / Silver",
+     "price": "35.00"
+    },
+    {
+     "id": "51049683910914",
+     "title": "7 / Gold",
+     "price": "40.00"
+    },
+    {
+     "id": "51049683943682",
+     "title": "8 / Silver",
+     "price": "35.00"
+    },
+    {
+     "id": "51049683976450",
+     "title": "8 / Gold",
+     "price": "40.00"
+    },
+    {
+     "id": "51049684009218",
+     "title": "9 / Silver",
+     "price": "35.00"
+    },
+    {
+     "id": "51049684041986",
+     "title": "9 / Gold",
+     "price": "40.00"
+    },
+    {
+     "id": "51049684074754",
+     "title": "10 / Silver",
+     "price": "35.00"
+    },
+    {
+     "id": "51049684107522",
+     "title": "10 / Gold",
+     "price": "40.00"
+    }
+   ],
+   "engraving": {
+    "maxLines": 1,
+    "maxCharsPerLine": 25,
+    "format": "decimal",
+    "singleLineCoords": true,
+    "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥°"
+   },
+   "fields": [
+    "Engraving"
+   ]
+  },
+  {
+   "id": "ring-mens",
+   "name": "Coordinates Flat Band Ring (Men's)",
+   "type": "ring",
+   "handle": "coordinates-flat-band-ring-mens",
+   "url": "https://ourcoordinates.com/products/coordinates-flat-band-ring-mens",
+   "image": "https://cdn.shopify.com/s/files/1/0300/7437/2231/files/coordinates-flat-band-ring-mens-3050949.jpg?v=1794667929",
+   "price": "42.00",
+   "variants": [
+    {
+     "id": "51049692659970",
+     "title": "8 / Silver",
+     "price": "42.00"
+    },
+    {
+     "id": "51049692692738",
+     "title": "8 / Gold",
+     "price": "47.00"
+    },
+    {
+     "id": "51049692725506",
+     "title": "8 / Black",
+     "price": "47.00"
+    },
+    {
+     "id": "51049692758274",
+     "title": "9 / Silver",
+     "price": "42.00"
+    },
+    {
+     "id": "51049692791042",
+     "title": "9 / Gold",
+     "price": "47.00"
+    },
+    {
+     "id": "51049692823810",
+     "title": "9 / Black",
+     "price": "47.00"
+    },
+    {
+     "id": "51049692856578",
+     "title": "10 / Silver",
+     "price": "42.00"
+    },
+    {
+     "id": "51049692889346",
+     "title": "10 / Gold",
+     "price": "47.00"
+    },
+    {
+     "id": "51049692922114",
+     "title": "10 / Black",
+     "price": "47.00"
+    }
+   ],
+   "engraving": {
+    "maxLines": 1,
+    "maxCharsPerLine": 25,
+    "format": "decimal",
+    "singleLineCoords": true,
+    "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥°"
+   },
+   "fields": [
+    "Engraving"
+   ]
+  },
+  {
+   "id": "keychain",
+   "name": "Coordinates Keychain",
+   "type": "keychain",
+   "handle": "coordinates-keychain",
+   "url": "https://ourcoordinates.com/products/coordinates-keychain",
+   "image": "https://cdn.shopify.com/s/files/1/0300/7437/2231/files/coordinates-keychain-2955920.jpg?v=1794667870",
+   "price": "35.00",
+   "variants": [
+    {
+     "id": "51049657073922",
+     "title": "Without back engraving / Rose gold",
+     "price": "35.00"
+    },
+    {
+     "id": "51049657106690",
+     "title": "Without back engraving / Gold",
+     "price": "35.00"
+    },
+    {
+     "id": "51049657139458",
+     "title": "Without back engraving / Silver",
+     "price": "35.00"
+    }
+   ],
+   "engraving": {
+    "maxLines": 1,
+    "maxCharsPerLine": 30,
+    "format": "decimal",
+    "singleLineCoords": true,
+    "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥°"
+   },
+   "fields": [
+    "Engraving"
+   ]
+  }
+ ]
 }
