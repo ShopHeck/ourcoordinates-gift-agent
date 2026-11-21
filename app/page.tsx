@@ -1,62 +1,114 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { fitEngraving } from "@/lib/engraving/fit";
-import { products } from "@/lib/catalog";
+import { products, getProduct } from "@/lib/catalog";
+import { renderPreviewSVG } from "@/components/Preview/svg";
+import type { AgentState } from "@/lib/agent/state";
+import type { Pin } from "@/components/Map/PlaceMap";
 
-type Candidate = { name: string; address: string; lat: number; lng: number };
+const PlaceMap = dynamic(() => import("@/components/Map/PlaceMap"), { ssr: false });
+
+type Bubble = { from: "you" | "agent"; text: string };
+const gold = "#b8892e";
 
 export default function Home() {
-  const [q, setQ] = useState("");
-  const [cands, setCands] = useState<Candidate[]>([]);
-  const [picked, setPicked] = useState<Candidate | null>(null);
-  const [productId, setProductId] = useState(products[0].id);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
+  const [bubbles, setBubbles] = useState<Bubble[]>([
+    { from: "agent", text: "Tell me about a place that matters, like where you met or got engaged. I'll turn it into a piece they'll wear every day." },
+  ]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [state, setState] = useState<AgentState>({ stage: "DESCRIBE", candidates: [] });
+  const [pins, setPins] = useState<Pin[]>([]);
+  const [sel, setSel] = useState<number | null>(null);
+  const [input, setInput] = useState("");
+  const [extra, setExtra] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  async function search(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true); setErr(""); setPicked(null);
-    const r = await fetch(`/api/geocode?q=${encodeURIComponent(q)}`);
-    const j = await r.json();
-    setLoading(false);
-    if (!r.ok) return setErr(j.error);
-    setCands(j.candidates);
-    if (!j.candidates.length) setErr("No matches. Try adding a city or landmark.");
+  async function call(body: Record<string, unknown>, show?: string) {
+    if (show) setBubbles((b) => [...b, { from: "you", text: show }]);
+    setBusy(true);
+    try {
+      const r = await fetch("/api/agent", { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ messages, state, ...body }) });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error);
+      setMessages(j.messages);
+      setState(j.state);
+      if (j.state.stage === "CANDIDATES") { setPins(j.state.candidates); setSel(null); }
+      if (j.text) setBubbles((b) => [...b, { from: "agent", text: j.text }]);
+    } catch (e: any) {
+      setBubbles((b) => [...b, { from: "agent", text: `Something went wrong: ${e.message}` }]);
+    } finally { setBusy(false); }
   }
 
-  const product = products.find((p) => p.id === productId)!;
-  const fit = picked ? fitEngraving(picked.lat, picked.lng, product.engraving) : null;
+  const send = (e: React.FormEvent) => { e.preventDefault(); const t = input.trim(); if (!t || busy) return; setInput(""); call({ text: t }, t); };
+  const confirm = () => { if (sel === null) return; const p = pins[sel]; call({ confirm: p }, `That's the one: ${p.name}`); };
+  const onSelect = useCallback((i: number) => setSel(i), []);
+  const onMove = useCallback((i: number, lat: number, lng: number) => {
+    setPins((ps) => ps.map((p, j) => (j === i ? { ...p, lat, lng, name: `${p.name.replace(/ \(adjusted\)$/, "")} (adjusted)` } : p)));
+    setSel(i);
+  }, []);
+
+  // Live preview (R4): re-fit and re-render locally on every keystroke, no round trip.
+  const product = state.productId ? getProduct(state.productId) : undefined;
+  const live = useMemo(() => {
+    if (!product || !state.confirmed) return null;
+    const lines = extra.trim() ? [extra.trim()] : [];
+    const fit = fitEngraving(state.confirmed.lat, state.confirmed.lng, product.engraving, lines);
+    return { fit, svg: renderPreviewSVG(product, fit.lines) };
+  }, [product, state.confirmed, extra]);
 
   return (
-    <main style={{ maxWidth: 560, margin: "40px auto", padding: 16 }}>
-      <h1>Where's your place?</h1>
-      <form onSubmit={search} style={{ display: "flex", gap: 8 }}>
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="The pier where we got engaged, Clearwater"
-          style={{ flex: 1, padding: 10 }} />
-        <button disabled={loading}>{loading ? "…" : "Find"}</button>
-      </form>
-      {err && <p style={{ color: "crimson" }}>{err}</p>}
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {cands.map((c) => (
-          <li key={`${c.lat},${c.lng}`} style={{ border: "1px solid #ddd", borderRadius: 8, padding: 12, marginTop: 8 }}>
-            <strong>{c.name}</strong><div style={{ fontSize: 13, color: "#555" }}>{c.address}</div>
-            <button onClick={() => setPicked(c)} style={{ marginTop: 6 }}>
-              {picked === c ? "Confirmed ✓" : "Confirm this place"}
-            </button>
-          </li>
+    <main style={{ maxWidth: 520, margin: "0 auto", minHeight: "100vh", display: "flex", flexDirection: "column", background: "#faf7f1" }}>
+      <header style={{ padding: "16px 20px", borderBottom: "1px solid #eee", fontWeight: 600, letterSpacing: 0.5 }}>
+        OurCoordinates <span style={{ color: gold }}>Gift Agent</span>
+      </header>
+
+      <section style={{ flex: 1, padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+        {bubbles.map((b, i) => (
+          <div key={i} style={{ alignSelf: b.from === "you" ? "flex-end" : "flex-start", maxWidth: "82%",
+            background: b.from === "you" ? gold : "#fff", color: b.from === "you" ? "#fff" : "#222",
+            padding: "10px 14px", borderRadius: 16, boxShadow: "0 1px 2px #0001", lineHeight: 1.4 }}>{b.text}</div>
         ))}
-      </ul>
-      {fit && (
-        <section style={{ marginTop: 24 }}>
-          <select value={productId} onChange={(e) => setProductId(e.target.value)}>
-            {products.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-          </select>
-          <pre style={{ background: "#111", color: "#e8d8a0", padding: 16, borderRadius: 8, fontSize: 16 }}>
-            {fit.lines.join("\n")}
-          </pre>
-          <p style={{ fontSize: 13 }}>Accurate to about {fit.accuracy_m.toFixed(1)} m{fit.ok ? "" : ` · ${fit.errors.join("; ")}`}</p>
-        </section>
-      )}
+
+        {state.stage === "CANDIDATES" && pins.length > 0 && (
+          <div style={{ background: "#fff", borderRadius: 14, padding: 10, boxShadow: "0 1px 3px #0002" }}>
+            <PlaceMap pins={pins} selected={sel} onSelect={onSelect} onMove={onMove} />
+            <p style={{ fontSize: 12, color: "#777", margin: "8px 4px" }}>Tap a pin, or drag it to the exact spot.</p>
+            {pins.map((p, i) => (
+              <button key={i} onClick={() => setSel(i)} style={{ display: "block", width: "100%", textAlign: "left", marginTop: 6,
+                padding: 10, borderRadius: 10, border: `2px solid ${sel === i ? gold : "#eee"}`, background: "#fff" }}>
+                <strong>{p.name}</strong><div style={{ fontSize: 12, color: "#666" }}>{p.address}</div>
+              </button>
+            ))}
+            <button disabled={sel === null || busy} onClick={confirm} style={{ marginTop: 10, width: "100%", padding: 12,
+              borderRadius: 10, border: 0, background: sel === null ? "#ccc" : gold, color: "#fff", fontWeight: 600 }}>Confirm this place</button>
+          </div>
+        )}
+
+        {live && (
+          <div style={{ background: "#fff", borderRadius: 14, padding: 14, boxShadow: "0 1px 3px #0002" }}>
+            <div style={{ fontWeight: 600, marginBottom: 8 }}>{product!.name}</div>
+            <div dangerouslySetInnerHTML={{ __html: live.svg }} />
+            <input value={extra} onChange={(e) => setExtra(e.target.value)} placeholder="Add a line (names or a date)"
+              style={{ width: "100%", padding: 10, marginTop: 10, borderRadius: 8, border: "1px solid #ddd", boxSizing: "border-box" }} />
+            <p style={{ fontSize: 12, color: live.fit.ok ? "#666" : "crimson", marginTop: 6 }}>
+              {live.fit.ok ? `Accurate to about ${live.fit.accuracy_m < 1 ? "under a meter" : `${live.fit.accuracy_m.toFixed(0)} m`}` : live.fit.errors.join("; ")}
+            </p>
+            <select value={product!.id} onChange={(e) => setState((s) => ({ ...s, productId: e.target.value }))}
+              style={{ width: "100%", padding: 8, borderRadius: 8 }}>
+              {products.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
+          </div>
+        )}
+        {busy && <div style={{ color: "#999", fontSize: 13 }}>Thinking…</div>}
+      </section>
+
+      <form onSubmit={send} style={{ display: "flex", gap: 8, padding: 12, borderTop: "1px solid #eee", position: "sticky", bottom: 0, background: "#faf7f1" }}>
+        <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="The pier where we got engaged…"
+          style={{ flex: 1, padding: 12, borderRadius: 22, border: "1px solid #ddd" }} />
+        <button disabled={busy} style={{ padding: "0 18px", borderRadius: 22, border: 0, background: gold, color: "#fff", fontWeight: 600 }}>Send</button>
+      </form>
     </main>
   );
 }

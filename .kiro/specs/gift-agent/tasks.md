@@ -4,7 +4,7 @@
 - [x] 3 lib/engraving: formatDMS, formatDecimal, fitToLimits (+ PBT: output never exceeds limits; round-trip error <= reported accuracy)
 - [x] 4 lib/geo: geocode + reverse geocode wrappers
 - [x] 5 Agent route with tool calling + state machine
-- [ ] 6 Chat UI + map confirm (pins, drag)
+- [x] 6 Chat UI + map confirm (pins, drag)
 - [x] 7 SVG preview component
 - [ ] 8 Checkout (Shopify cart / PayPal sandbox)
 - [ ] 9 Hooks: on-save run engraving tests; on spec change update tasks
