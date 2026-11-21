@@ -1,0 +1,17 @@
+{
+  "_note": "Placeholder specs for development. Replace with the real OurCoordinates catalog (names, variants, limits) once approved.",
+  "products": [
+    { "id": "bar-bracelet", "name": "Coordinate Bar Bracelet", "type": "bracelet",
+      "engraving": { "maxLines": 2, "maxCharsPerLine": 22, "format": "dms", "singleLineCoords": false,
+        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥" } },
+    { "id": "bar-necklace", "name": "Coordinate Bar Necklace", "type": "necklace",
+      "engraving": { "maxLines": 3, "maxCharsPerLine": 24, "format": "dms", "singleLineCoords": false,
+        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥" } },
+    { "id": "band-ring", "name": "Coordinate Band Ring", "type": "ring",
+      "engraving": { "maxLines": 1, "maxCharsPerLine": 30, "format": "decimal", "singleLineCoords": true,
+        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,&-/" } },
+    { "id": "keychain", "name": "Coordinate Keychain", "type": "keychain",
+      "engraving": { "maxLines": 4, "maxCharsPerLine": 20, "format": "dms", "singleLineCoords": false,
+        "allowedChars": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 .,&'-/#♥" } }
+  ]
+}

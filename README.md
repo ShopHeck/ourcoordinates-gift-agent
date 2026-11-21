@@ -12,3 +12,12 @@ Specs, steering, and hooks live in [`/.kiro`](.kiro):
 
 ## License
 MIT
+
+## Run locally
+```bash
+npm install
+cp .env.example .env.local   # add keys
+npm run dev                   # http://localhost:3000
+npm test                      # unit + property tests (fast-check)
+```
+Without `GOOGLE_MAPS_API_KEY`, place search falls back to OpenStreetMap Nominatim.
