@@ -1,0 +1,1 @@
+{"name":"Run engraving tests on save","when":{"type":"fileEdited","patterns":["lib/engraving/**/*.ts"]},"then":{"type":"askAgent","prompt":"Run `npx vitest run tests/engraving` and fix any failing property tests."}}

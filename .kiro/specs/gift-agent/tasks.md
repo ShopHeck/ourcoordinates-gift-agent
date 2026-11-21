@@ -1,0 +1,11 @@
+# Tasks
+- [ ] 1 Scaffold Next.js + TS, Vitest, fast-check; add MIT LICENSE; commit /.kiro
+- [ ] 2 Product catalog JSON (OurCoordinates bracelet, necklace, ring, keychain)
+- [ ] 3 lib/engraving: formatDMS, formatDecimal, fitToLimits (+ PBT: output never exceeds limits; round-trip error <= reported accuracy)
+- [ ] 4 lib/geo: geocode + reverse geocode wrappers
+- [ ] 5 Agent route with tool calling + state machine
+- [ ] 6 Chat UI + map confirm (pins, drag)
+- [ ] 7 SVG preview component
+- [ ] 8 Checkout (Shopify cart / PayPal sandbox)
+- [ ] 9 Hooks: on-save run engraving tests; on spec change update tasks
+- [ ] 10 Deploy to Vercel; README, demo video, Kiro write-up, social post
