@@ -53,14 +53,14 @@ export default function Home() {
 
   // Live preview (R4): re-fit and re-render locally on every keystroke, no round trip.
   const product = state.productId ? getProduct(state.productId) : undefined;
+  const variant = product?.variants.find((v) => v.id === variantId) ?? product?.variants[0];
   const live = useMemo(() => {
     if (!product || !state.confirmed) return null;
     const lines = extra.trim() ? [extra.trim()] : [];
     const fit = fitEngraving(state.confirmed.lat, state.confirmed.lng, product.engraving, lines);
     const props = lineItemProperties(product, fit.lines, state.confirmed);
-    return { fit, svg: renderPreviewSVG(product, fit.lines), props };
-  }, [product, state.confirmed, extra]);
-  const variant = product?.variants.find((v) => v.id === variantId) ?? product?.variants[0];
+    return { fit, svg: renderPreviewSVG(product, fit.lines, variant?.title), props };
+  }, [product, state.confirmed, extra, variant?.title]);
 
   return (
     <main style={{ maxWidth: 520, margin: "0 auto", minHeight: "100vh", display: "flex", flexDirection: "column", background: "#faf7f1" }}>
